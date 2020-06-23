@@ -1,18 +1,32 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance,Force
 Menu,TRAY,NoIcon
+
 /*
 
-External Libraries
+Functions
 
 */
 
+EnableGui() {
+    GuiControl, Enable, Butt1
+    GuiControl, Enable, Butt2
+    GuiControl, Enable, Butt3
+    GuiControl, Enable, Butt4
+    GuiControl, Enable, GameList
+}
+
+DisableGui() {
+    GuiControl, Disable, Butt1
+    GuiControl, Disable, Butt2
+    GuiControl, Disable, Butt3
+    GuiControl, Disable, Butt4
+    GuiControl, Disable, GameList
+}
+
 DownloadFile(UrlToFile, SaveFileAs, Overwrite := True, UseProgressBar := True, ExpectedFileSize := 0) {
 	Gui, Show
-	GuiControl, Disable, Butt1
-	GuiControl, Disable, Butt2
-    GuiControl, Disable, Butt3
-	GuiControl, Disable, GameList
+	DisableGui()
     ;Check if the file already exists and if we must not overwrite it
     If (!Overwrite && FileExist(SaveFileAs))
         Return
@@ -96,6 +110,7 @@ GUI
 
 */
 Menu, tray, Icon , assets/icon.ico, 1, 1
+Gui, New,,beeShop
 Gui, Add, Pic, x20 y4 vImg, assets\bee.tif
 Gui, Add, Text, x243 y29 w200 cFFFFFF vStatus, Status: Idle
 Gui, Add, Text, x243 y45 cFFFFFF, Database: 3DSAll
@@ -104,13 +119,14 @@ Gui, Add, Text, x279 y61 w200 cFFFFFF vSpeedGui2, -
 Gui, Add, ListBox, x20 y120 w193 h250 vGameList
 Gui, Add, Button, x223 y120 w107 h30 vButt1, Bump
 Gui, Add, Button, x223 y160 w107 h30 vButt2, IP Config
-Gui, Add, Button, x223 y200 w107 h30 vButt3, Fix Upload
+Gui, Add, Button, x223 y200 w107 h30 vButt3, Upload
+; Gui, Add, Button, x223 y240 w107 h30 vButt4, Settings
 Gui, Add, Progress,x223 y327 w107 h30 vProgress cffda30, 0
 Gui, Color, 333e40
 Gui, Show, w350 h370, BeeShop
 
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-whr.Open("GET", "https://3dsall.com/db.txt", true)
+whr.Open("GET", "https://3dsall.com/db.csv", true)
 whr.Send()
 whr.WaitForResponse()
 games := whr.ResponseText
@@ -135,7 +151,8 @@ if FileExist("ip.txt") {
 }
 return
 
-ButtonFixUpload:
+ButtonUpload:
+DisableGui()
 Goto, FTPUpload
 return
 
@@ -154,10 +171,7 @@ if (GameList = "") {
         If (game[1] = GameList) {
             DownloadFile(game[2], "game.cia")
             GuiControl,, Progress,  0
-            GuiControl, Enable, Butt1
-            GuiControl, Enable, Butt2
-            GuiControl, Enable, Butt3
-            GuiControl, Enable, GameList
+            EnableGui()
             GuiControl,, SpeedGui2, -
             Sleep, 100
             GuiControl,, Progress,  25
@@ -186,7 +200,31 @@ if FileExist("game.cia") {
     } else {
     MsgBox, 0, beeShop - Error, game.cia has not been found
     }
+EnableGui()
 return
 
+/*
+
+; Settings
+; Work In Progress
+
+ButtonSettings:
+Gui, Settings:New,,Settings
+Menu, tray, Icon , assets/icon.ico, 1, 1
+Gui, Add, Text,cFFFFFF, FTP Method:
+Gui, Add, DropDownList, vFTPMethod Choose1 w120, Native FTP|cURL
+Gui, Add, Text,cFFFFFF, Database:
+Gui, Add, DropDownList, vDatabase Choose1 w120 Disabled, 3DSAll
+Gui, Add, Button, w120, Save
+Gui, Color, 333e40
+Gui, Show,,Settings
+return
+
+ButtonSave:
+Gui, Submit
+FileAppend, [FTP Method]`n %FTPMethod%, config.txt
+return
+
+*/
 GuiClose:
 ExitApp
