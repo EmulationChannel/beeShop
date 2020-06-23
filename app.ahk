@@ -1,7 +1,6 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance,Force
 Menu,TRAY,NoIcon
-
 /*
 
 External Libraries
@@ -141,28 +140,34 @@ Goto, FTPUpload
 return
 
 ButtonBump:
-Gui, Submit
-GuiControl, Text, Status,  Status: Downloading
-Loop, % games.MaxIndex()
-{
-	game := games[A_Index]
-	game := StrSplit(game, ",") 
-    ; game[2] url
-    If (game[1] = GameList) {
-		DownloadFile(game[2], "game.cia")
-		GuiControl,, Progress,  0
-		GuiControl, Enable, Butt1
-		GuiControl, Enable, Butt2
-        GuiControl, Enable, Butt3
-		GuiControl, Enable, GameList
-		GuiControl,, SpeedGui2, -
-		Sleep, 100
-		GuiControl,, Progress,  25
-		break
-	}
-}
+Gui, Submit, NoHide
 
+if (GameList = "") {
+    MsgBox, 0, beeShop - Error, No game was selected.
+} else if (FileExist("ip.txt")) {
+    GuiControl, Text, Status,  Status: Downloading
+    Loop, % games.MaxIndex()
+    {
+        game := games[A_Index]
+        game := StrSplit(game, ",") 
+        ; game[2] url
+        If (game[1] = GameList) {
+            DownloadFile(game[2], "game.cia")
+            GuiControl,, Progress,  0
+            GuiControl, Enable, Butt1
+            GuiControl, Enable, Butt2
+            GuiControl, Enable, Butt3
+            GuiControl, Enable, GameList
+            GuiControl,, SpeedGui2, -
+            Sleep, 100
+            GuiControl,, Progress,  25
+            break
+        }
+    }
 Goto, FTPUpload
+} else {
+    MsgBox, 0, beeShop - Error, IP is not configured.
+}
 return
 
 FTPUpload:
@@ -171,7 +176,7 @@ if FileExist("ip.txt") {
    IpPort := "ftp://" . IpPort
    GuiControl,, Progress,  100
    GuiControl, Text, Status,  Status: Uploading
-   RunWait, cmd.exe /c curl -T %A_WorkingDir%\game.cia %IpPort%,, Hide
+   RunWait, curl -T "%A_WorkingDir%\game.cia" %IpPort%,, hide
    GuiControl,, Progress,  0
    GuiControl, Text, Status,  Status: Idle
 }
