@@ -171,15 +171,21 @@ Goto, FTPUpload
 return
 
 FTPUpload:
-if FileExist("ip.txt") {
-   FileRead, IpPort, ip.txt
-   IpPort := "ftp://" . IpPort
-   GuiControl,, Progress,  100
-   GuiControl, Text, Status,  Status: Uploading
-   RunWait, curl -T "%A_WorkingDir%\game.cia" %IpPort%,, hide
-   GuiControl,, Progress,  0
-   GuiControl, Text, Status,  Status: Idle
-}
+if FileExist("game.cia") {
+    if FileExist("ip.txt") {
+       FileRead, IpPort, ip.txt
+       IpPort := "ftp://" . IpPort
+       GuiControl,, Progress,  100
+       GuiControl, Text, Status,  Status: Uploading
+       RunWait, curl -T "%A_WorkingDir%\game.cia" %IpPort%,, hide
+       GuiControl,, Progress,  0
+       GuiControl, Text, Status,  Status: Idle
+    } else {
+        MsgBox, 0, beeShop - Error, IP is not configured.
+    }
+    } else {
+    MsgBox, 0, beeShop - Error, game.cia has not been found
+    }
 return
 
 GuiClose:
