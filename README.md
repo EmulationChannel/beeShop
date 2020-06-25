@@ -11,6 +11,10 @@ AutoHotkey Script that downloads 3DS game files from a database, and copies them
 beeShop should now start downloading the game file.
 
 ## Credits:
-* manuGMG
-* Steveice10 ([servefiles.py](https://github.com/Steveice10/FBI/tree/master/servefiles))
-* Special thanks to @TimmSkiller and @delv1n.
+* manuGMG,
+* Steveice10 ([servefiles.py](https://github.com/Steveice10/FBI/tree/master/servefiles)),
+* TimmSkiller (fixes), 
+* DexterX12 (fixes),
+* Mineplanet84 (testing),
+* MyPasswordIsWeak (testing),
+* Kaiju (testing).
