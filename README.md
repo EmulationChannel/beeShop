@@ -17,4 +17,5 @@ beeShop should now start downloading the game file.
 * DexterX12 (fixes),
 * Mineplanet84 (testing),
 * MyPasswordIsWeak (testing),
+* Mike (testing),
 * Kaiju (testing).
