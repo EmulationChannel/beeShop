@@ -3,9 +3,7 @@
 Menu,TRAY,NoIcon
 
 /*
-
 Functions
-
 */
 
 EnableGui() {
@@ -14,6 +12,7 @@ EnableGui() {
     GuiControl, Enable, Butt3
     GuiControl, Enable, Butt4
     GuiControl, Enable, GameList
+    GuiControl, Enable, Search
 }
 
 DisableGui() {
@@ -22,6 +21,7 @@ DisableGui() {
     GuiControl, Disable, Butt3
     GuiControl, Disable, Butt4
     GuiControl, Disable, GameList
+    GuiControl, Disable, Search
 }
 
 DownloadFile(UrlToFile, SaveFileAs, Overwrite := True, UseProgressBar := True, ExpectedFileSize := 0) {
@@ -105,31 +105,36 @@ DownloadFile(UrlToFile, SaveFileAs, Overwrite := True, UseProgressBar := True, E
 }
 
 /*
-
 GUI
-
 */
+
 Menu, tray, Icon , assets/icon.ico, 1, 1
-Gui, New,,beeShop
+Gui, 1:New,,beeShop
 Gui, Add, Pic, x20 y4 vImg, assets\bee.tif
 Gui, Add, Text, x243 y29 w200 cFFFFFF vStatus, Status: Idle
-Gui, Add, Text, x243 y45 cFFFFFF, Database: 3DSAll
+Gui, Add, Text, x243 y45 cFFFFFF vDatabase, Database: 3DSAll
 Gui, Add, Text, x243 y61 cFFFFFF vSpeedGui, Speed:
 Gui, Add, Text, x279 y61 w200 cFFFFFF vSpeedGui2, -
-Gui, Add, ListBox, x20 y120 w193 h250 vGameList
+Gui, Add, ListBox, x20 y120 w193 h250 vGameList +hwndGameList
 Gui, Add, Button, x223 y120 w107 h30 vButt1, Bump
-Gui, Add, Button, x223 y160 w107 h30 vButt2, IP Config
+Gui, Add, Button, x223 y160 w107 h30 vButt2, Settings
 Gui, Add, Button, x223 y200 w107 h30 vButt3, Upload
+Gui, Add, Edit, x223 y240 w107 h25 vSearch,
 ; Gui, Add, Button, x223 y240 w107 h30 vButt4, Settings
 Gui, Add, Progress,x223 y327 w107 h30 vProgress cffda30, 0
 Gui, Color, 333e40
 Gui, Show, w350 h370, BeeShop
 
-whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-whr.Open("GET", "https://3dsall.com/db.csv", true)
-whr.Send()
-whr.WaitForResponse()
-games := whr.ResponseText
+if (FileExist("assets/db.csv")) {
+    FileRead, games, assets\db.csv
+    GuiControl, Text, Database, Database: Local
+} else {
+    whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+    whr.Open("GET", "https://3dsall.com/db.csv", true)
+    whr.Send()
+    whr.WaitForResponse()
+    games := whr.ResponseText
+}
 games := StrSplit(games, "`n") 
 
 Loop, % games.MaxIndex()
@@ -142,11 +147,11 @@ Loop, % games.MaxIndex()
 GuiControl,, Img, assets\bee2.tif
 return
 
-ButtonIPConfig:
+ButtonSettings:
 if FileExist("ip.txt") {
 	Run, ip.txt
 } else {
-	FileAppend, IP:Port, ip.txt
+	FileAppend, Write down your IP here., ip.txt
 	Run, ip.txt
 }
 return
@@ -188,26 +193,28 @@ FTPUpload:
 if FileExist("game.cia") {
     if FileExist("ip.txt") {
        FileRead, IpPort, ip.txt
-       IpPort := "ftp://" . IpPort
+       IpPort := "ftp://" . Ip
+        
+       ;MsgBox % IpPort
        GuiControl,, Progress,  100
        GuiControl, Text, Status,  Status: Uploading
-       RunWait, curl -T "%A_WorkingDir%\game.cia" %IpPort%,, hide
+       RunWait, serve.exe,,hide
        GuiControl,, Progress,  0
        GuiControl, Text, Status,  Status: Idle
+       EnableGui()
     } else {
         MsgBox, 0, beeShop - Error, IP is not configured.
+        EnableGui()
     }
     } else {
     MsgBox, 0, beeShop - Error, game.cia has not been found
+    EnableGui()
     }
-EnableGui()
 return
 
 /*
-
 ; Settings
 ; Work In Progress
-
 ButtonSettings:
 Gui, Settings:New,,Settings
 Menu, tray, Icon , assets/icon.ico, 1, 1
@@ -219,12 +226,17 @@ Gui, Add, Button, w120, Save
 Gui, Color, 333e40
 Gui, Show,,Settings
 return
-
 ButtonSave:
 Gui, Submit
-FileAppend, [FTP Method]`n %FTPMethod%, config.txt
+FileAppend, [FTP Method]`n %FTPMethod%, ip.txt
+return
+*/
+
+Enter::
+Send, {Enter}
+Gui,1:Submit,NoHide
+GuiControl, ChooseString, GameList, %Search%
 return
 
-*/
 GuiClose:
 ExitApp
