@@ -129,11 +129,8 @@ if (FileExist("assets/db.csv")) {
     FileRead, games, assets\db.csv
     GuiControl, Text, Database, Database: Local
 } else {
-    whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    whr.Open("GET", "[Database Link]", true)
-    whr.Send()
-    whr.WaitForResponse()
-    games := whr.ResponseText
+    MsgBox, 0, beeShop - Error, Database is missing.`n(assets/db.csv)
+    ExitApp
 }
 games := StrSplit(games, "`n") 
 
