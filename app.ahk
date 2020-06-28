@@ -130,7 +130,7 @@ if (FileExist("assets/db.csv")) {
     GuiControl, Text, Database, Database: Local
 } else {
     whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    whr.Open("GET", "https://3dsall.com/db.csv", true)
+    whr.Open("GET", "[Database Link]", true)
     whr.Send()
     whr.WaitForResponse()
     games := whr.ResponseText
