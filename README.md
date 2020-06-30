@@ -1,5 +1,5 @@
 # beeShop
-AutoHotkey Script that downloads 3DS game files from a database, and copies them over to a 3DS using FBI's .
+AutoHotkey Script that downloads 3DS game files from a database, and sends them over to a 3DS using FBI's servefiles feature.
 
 ## How to use:
 
