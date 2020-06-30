@@ -12,7 +12,7 @@ NOTE 2: Currently, beeShop only supports downloading & sending one game at a tim
 4. Open beeShop.exe, and click on "Settings", which should open a text file called `ip.txt`. Write down your IP (example: `192.168.1.36`) in the first line of it, save the file, and close it.
 5. Select game from the list of the available ones, and click "Bump".
 
-beeShop should now start downloading the game file. Once this is done, click on the "Upload" button and beeShop should not start serving the game file to FBI, which will install it.
+beeShop should now start downloading the game file. Once this is done, click on the "Upload" button and beeShop should now start serving the game file to FBI, which will install it.
 
 ## Credits:
 * manuGMG,
