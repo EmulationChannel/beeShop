@@ -24,5 +24,5 @@ beeShop should now start downloading the game file. Once this is done, click on 
 * Mike (testing),
 * Kaiju (testing).
 
-## Note
+## Note:
 beeShop is not encouraging piracy and it is only a way of gathering homebrew applications to a 3DS modded console.
