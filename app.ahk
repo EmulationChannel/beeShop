@@ -241,7 +241,7 @@ if (GameList = "") {
         ; game[2] url
         If (game[1] = GameList) {
             DownloadFile(game[2], GameList . ".cia")
-            GameName := GameList
+            GameName := GameList . ".cia"
             GuiControl,, Progress,  0
             EnableGui()
             GuiControl,, SpeedGui2, -
@@ -262,11 +262,11 @@ if FileExist(GameName) {
     if FileExist("ip.txt") {
        FileRead, IpPort, ip.txt
        IpPort := "ftp://" . Ip
-        
        ;MsgBox % IpPort
        GuiControl,, Progress,  100
        GuiControl, Text, Status,  Status: Uploading
-       RunWait, serve.exe,,hide
+       FileAppend, 
+       RunWait, serve.exe "%GameName%",,hide
        GuiControl,, Progress,  0
        GuiControl, Text, Status,  Status: Idle
        EnableGui()
