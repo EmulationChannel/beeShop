@@ -284,7 +284,6 @@ if FileExist(GameName) {
 } else {
     FileSelectFile, GameName, 1,, beeShop - Select the game, CIAs (*.cia)
     if (GameName != "") {
-        SplitPath, GameName, GameName
         Goto, FTPUpload
     } else {
         EnableGui()
