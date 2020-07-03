@@ -3,7 +3,7 @@ AutoHotkey Script that downloads CIAs from a database, and sends them over to a 
 
 ## How to use:
 
-NOTE: Make sure your 3DS and the computer you're using beeShop on are on the same network, if they aren't, you will not be able to get send the files over to your 3DS.
+NOTE: Make sure your 3DS and the computer you're using beeShop on are on the same network, if they aren't, you will not be able to send the files over to your 3DS.
 
 1. Download & extract the latest beeShop release (preferrably into a separate folder).
 2. Download `db.csv` (either made by yourself or from any other source) and put it inside the `assets` folder.
